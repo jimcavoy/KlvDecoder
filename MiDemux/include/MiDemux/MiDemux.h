@@ -5,7 +5,7 @@
 class MiDemux
 {
 public:
-    MiDemux();
+    MiDemux(int reads, float frequency);
     ~MiDemux();
 
     void read(const uint8_t* stream, size_t len);

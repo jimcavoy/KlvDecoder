@@ -5,24 +5,6 @@
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace
-{
-    std::string urlEncode(const char* url)
-    {
-        std::string ret;
-        size_t len = strlen(url);
-
-        for (int i = 0; i < len; i++)
-        {
-            if (isspace(url[i]) != 0)
-                ret += "%20";
-            else
-                ret.push_back(url[i]);
-        }
-        return ret;
-    }
-}
-
 class CmdLineParser::Impl
 {
 public:

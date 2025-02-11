@@ -7,6 +7,8 @@ project (KlvDecoder
 	DESCRIPTION "Converts KLV binary encoded metadata in a STANAG 4609 Motion Imagery stream to a human readable text format."
 	LANGUAGES CXX)
 
+include(GNUInstallDirs)
+
 # Include sub-projects.
 add_subdirectory (MiDemux)
 
@@ -34,6 +36,7 @@ target_link_libraries(KlvDecoder
     Boost::program_options
 )
 
+install(TARGETS KlvDecoder)
 
 # Test cases
 # enable_testing()

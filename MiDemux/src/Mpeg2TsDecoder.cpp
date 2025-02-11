@@ -1,9 +1,9 @@
 #include "Mpeg2TsDecoder.h"
 
 
-Mpeg2TsDecoder::Mpeg2TsDecoder()
-    /*: _reads(args.reads())
-    , _interval((UINT64)(90000 / args.frequency()))*/
+Mpeg2TsDecoder::Mpeg2TsDecoder(int count, float frequency)
+    : _reads(count)
+    , _interval((uint64_t)(90000 / frequency))
 {
     
 }

@@ -13,7 +13,7 @@ class Mpeg2TsDecoder
     : public lcss::TSParser
 {
 public:
-    Mpeg2TsDecoder();
+    Mpeg2TsDecoder(int count, float frequency);
 
     void onPacket(lcss::TransportPacket& pckt);
 
