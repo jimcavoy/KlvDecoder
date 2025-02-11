@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 
 class CmdLineParser
@@ -21,6 +22,7 @@ public:
     int reads() const;
     float frequency() const;
     FORMAT format() const;
+    std::string source() const;
 
 private:
     class Impl;

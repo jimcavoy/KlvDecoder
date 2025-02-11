@@ -1,9 +1,8 @@
 #include "Mpeg2TsDecoder.h"
 
 
-Mpeg2TsDecoder::Mpeg2TsDecoder(int count, float frequency)
-    : _reads(count)
-    , _interval((uint64_t)(90000 / frequency))
+Mpeg2TsDecoder::Mpeg2TsDecoder(float frequency)
+    : _interval((uint64_t)(90000 / frequency))
 {
     
 }
@@ -20,6 +19,11 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
     {
         processPayload(pckt);
     }
+}
+
+int Mpeg2TsDecoder::reads() const
+{
+    return _reads;
 }
 
 
@@ -90,7 +94,7 @@ void Mpeg2TsDecoder::processKlv()
     if (diff > _interval)
     {
         _time = timeNow;
-        //_klvParser.parse({ (BYTE*)_klvSample.data(), _klvSample.length() });
+        _klvParser.parse({ (uint8_t*)_klvSample.data(), _klvSample.length() });
         outputXmlSet();
     }
 }

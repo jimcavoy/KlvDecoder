@@ -5,6 +5,7 @@
 #include "PmtProxy.h"
 #include "AccessUnit.h"
 #include "Clock.h"
+#include "KlvParserImpl.h"
 
 
 class CmdLineParser;
@@ -13,9 +14,11 @@ class Mpeg2TsDecoder
     : public lcss::TSParser
 {
 public:
-    Mpeg2TsDecoder(int count, float frequency);
+    Mpeg2TsDecoder(float frequency);
 
     void onPacket(lcss::TransportPacket& pckt);
+
+    int reads() const;
 
 private:
     void processStartPayload(const lcss::TransportPacket& pckt);
@@ -29,10 +32,11 @@ private:
     lcss::ProgramMapTable _pmt{};
     PmtProxy _pmtHelper;
     AccessUnit _klvSample;
-    int _reads{};
-    UINT64 _interval;
-    UINT64 _time;
+    int _reads{ 0 };
+    uint64_t _interval{};
+    uint64_t _time{};
     PCRClock _pcrClock;
     SystemClock _systemClock;
+    KlvParserImpl _klvParser;
 };
 

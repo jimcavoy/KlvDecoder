@@ -25,6 +25,8 @@ set(LOKI_DIR "${loki-lib_SOURCE_DIR}")
 find_package(mp2tp 1 CONFIG REQUIRED)
 find_package(klvp 1 CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS property_tree)
 
 add_library(MiDemux STATIC)
 
@@ -34,6 +36,8 @@ target_sources(MiDemux
     src/AccessUnit.cpp
     src/Clock.h
     src/Clock.cpp
+    src/KlvParserImpl.h
+    src/KlvParserImpl.cpp
     src/MiDemux.cpp
     src/Mpeg2TsDecoder.h
     src/Mpeg2TsDecoder.cpp
@@ -63,4 +67,5 @@ target_link_libraries(MiDemux
     lcss::klvp
     lcss::mp2tp
     Microsoft.GSL::GSL
+    Boost::property_tree
 )

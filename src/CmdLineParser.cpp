@@ -14,6 +14,7 @@ public:
     int _reads{ 0 };
     float _frequency{ 1 };
     std::string _format;
+    std::string _source;
 };
 
 CmdLineParser::CmdLineParser()
@@ -33,12 +34,15 @@ int CmdLineParser::parse(int argc, char** argv)
     try
     {
         po::options_description desc("Allowed options.");
+        po::positional_options_description pos_desc;
+        pos_desc.add("source", 1);
 
         desc.add_options()
             ("help,?", "Produce help message.")
+            ("source", po::value<string>(&_pimpl->_source), "Source Motion Imagery stream or file. (default: - )")
             ("reads,r", po::value<int>(&_pimpl->_reads), "Number of KLV reads. Zero means continuous reads.")
             ("freqs,f", po::value<float>(&_pimpl->_frequency), "Frequency (Hz) to output the text representation.")
-            ("format,F", po::value<std::string>(&_pimpl->_format), "Output text format. (default: json).")
+            ("format,F", po::value<std::string>(&_pimpl->_format), "Output text format [json|text|xml]. (default: json).")
             ;
 
         po::command_line_parser parser{ argc, argv };
@@ -94,4 +98,9 @@ CmdLineParser::FORMAT CmdLineParser::format() const
     }
 
     return ret;
+}
+
+std::string CmdLineParser::source() const
+{
+    return _pimpl->_source;
 }

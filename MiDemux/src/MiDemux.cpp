@@ -6,8 +6,8 @@
 class MiDemux::Impl
 {
 public:
-    Impl(int reads, float frequency)
-        :_decoder(std::make_unique<Mpeg2TsDecoder>(reads, frequency))
+    Impl(float frequency)
+        :_decoder(std::make_unique<Mpeg2TsDecoder>(frequency))
     {
 
     }
@@ -16,8 +16,8 @@ public:
 };
 
 
-MiDemux::MiDemux(int reads, float frequency)
-    :_pimpl(std::make_unique<MiDemux::Impl>(reads, frequency))
+MiDemux::MiDemux(float frequency)
+    :_pimpl(std::make_unique<MiDemux::Impl>(frequency))
 {
 }
 
@@ -28,4 +28,9 @@ MiDemux::~MiDemux()
 void MiDemux::read(const uint8_t* stream, size_t len)
 {
     _pimpl->_decoder->parse(stream, (uint32_t) len);
+}
+
+int MiDemux::reads() const
+{
+    return _pimpl->_decoder->reads();
 }

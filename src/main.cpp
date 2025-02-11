@@ -1,13 +1,18 @@
+#include <array>
+#include <fstream>
 #include <iostream>
-
 #include <MiDemux/MiDemux.h>
+#include <fcntl.h>
 
 #include "CmdLineParser.h"
 
 #ifdef _WIN32
+#include <io.h>
 #include <Windows.h>
 #define fprintf fprintf_s
 #endif
+
+bool gRun = true;
 
 /////////////////////////////////////////////////////////////////////////////
 // Forward Declarations
@@ -18,8 +23,10 @@ void Banner();
 
 int main(int argc, char* argv[])
 {
-    CmdLineParser args;
     int retCode = 0;
+    CmdLineParser args;
+    std::shared_ptr<std::istream> ifile;
+    std::array<uint8_t, 9212> buffer;
 
     Banner();
 
@@ -28,9 +35,44 @@ int main(int argc, char* argv[])
         return retCode;
     }
 
-    MiDemux demux(args.reads(), args.frequency());
+    MiDemux demux(args.frequency());
 
+    if (args.source() == "-")
+    {
+#ifdef _WIN32
+        _setmode(_fileno(stdin), _O_BINARY);
+#endif
+        ifile.reset(&std::cin, [](...) {});
+    }
+    else
+    {
+        std::ifstream* tsfile = new std::ifstream(args.source(), std::ios::binary);
+        if (!tsfile->is_open())
+        {
+            std::cerr << "ERROR: Failed to open file, " << args.source() << std::endl;
+            return -1;
+        }
+        ifile.reset(tsfile);
+    }
 
+    while (gRun)
+    {
+        if (ifile->good())
+        {
+            ifile->read((char*)buffer.data(), buffer.size());
+            const std::streamsize len = ifile->gcount();
+        }
+        else
+        {
+            // sometimes we get a bad I/O read so reset the state
+            ifile->clear();
+        }
+
+        if (demux.reads() >= args.reads())
+        {
+            gRun = false;
+        }
+    }
 
     return retCode;
 }
@@ -57,6 +99,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
     case CTRL_BREAK_EVENT:
     case CTRL_SHUTDOWN_EVENT:
     case CTRL_LOGOFF_EVENT:
+        gRun = false;
         std::cerr << "Closing down, please wait" << std::endl;
         Sleep(1000);
         return TRUE;

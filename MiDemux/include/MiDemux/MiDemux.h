@@ -5,10 +5,12 @@
 class MiDemux
 {
 public:
-    MiDemux(int reads, float frequency);
+    MiDemux(float frequency);
     ~MiDemux();
 
     void read(const uint8_t* stream, size_t len);
+
+    int reads() const;
 
 private:
     class Impl;
