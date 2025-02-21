@@ -4,6 +4,7 @@
     "boost-json",
     "boost-program-options",
     "ms-gsl",
-    "boost-property-tree"
+    "boost-property-tree",
+    "sqlite3"
   ]
 }

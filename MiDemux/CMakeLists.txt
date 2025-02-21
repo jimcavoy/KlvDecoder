@@ -24,6 +24,9 @@ set(LOKI_DIR "${loki-lib_SOURCE_DIR}")
 
 find_package(mp2tp 1 CONFIG REQUIRED)
 find_package(klvp 1 CONFIG REQUIRED)
+set(ldsdb_DIR ${klvp_DIR}/../ldsdb)
+find_package(ldsdb 1 CONFIG REQUIRED)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS property_tree)
@@ -36,6 +39,8 @@ target_sources(MiDemux
     src/AccessUnit.cpp
     src/Clock.h
     src/Clock.cpp
+    src/KlvDecodeVisitor.h
+    src/KlvDecodeVisitor.cpp
     src/KlvParserImpl.h
     src/KlvParserImpl.cpp
     src/MiDemux.cpp
@@ -65,6 +70,7 @@ target_include_directories(MiDemux
 target_link_libraries(MiDemux 
   PRIVATE 
     lcss::klvp
+    lcss::ldsdb
     lcss::mp2tp
     Microsoft.GSL::GSL
     Boost::property_tree

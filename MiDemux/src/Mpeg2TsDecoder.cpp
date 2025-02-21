@@ -1,5 +1,7 @@
 #include "Mpeg2TsDecoder.h"
 
+#include <iterator>
+
 
 Mpeg2TsDecoder::Mpeg2TsDecoder(float frequency)
     : _interval((uint64_t)(90000 / frequency))
@@ -57,7 +59,7 @@ void Mpeg2TsDecoder::processStartPayload(const lcss::TransportPacket& pckt)
             {
                 if (_klvSample.length() > 0)
                 {
-                    processKlv();
+                    processKlv(pes);
                 }
                 _klvSample.clear();
                 _klvSample.insert((char*)data + bytesParsed, pckt.data_byte() - bytesParsed);
@@ -86,25 +88,50 @@ void Mpeg2TsDecoder::processPayload(const lcss::TransportPacket& pckt)
     }
 }
 
-void Mpeg2TsDecoder::processKlv()
+void Mpeg2TsDecoder::processKlv(const lcss::PESPacket& pes)
 {
+    _reads++;
     UINT64 timeNow = _systemClock.time();
     UINT64 diff = timeNow - _time;
+    BYTE stream_id = pes.stream_id();
 
-    if (diff > _interval)
-    {
+    //if (diff > _interval)
+    /*{
         _time = timeNow;
         _klvParser.parse({ (uint8_t*)_klvSample.data(), _klvSample.length() });
         outputXmlSet();
+    }*/
+
+    if (stream_id == 0xFC)
+    {
+        lcss::MetadataAUWrapper wrapper;
+        size_t count = wrapper.parse((BYTE*)_klvSample.data(), _klvSample.length());
+
+        if (count > 0)
+        {
+            lcss::MetadataAUWrapper::const_iterator it;
+            for (it = wrapper.begin(); it != wrapper.end(); ++it)
+            {
+                _klvParser.parse({ (BYTE*)it->AU_cell_data_bytes(), (UINT32)it->AU_cell_data_length() });
+                outputSet();
+            }
+            return;
+        }
+        else // missed labeled metadata stream
+        {
+            stream_id = 0xBD;
+        }
+
+        if (stream_id == 0xBD)
+        {
+            _klvParser.parse({ (BYTE*)_klvSample.data(), (UINT32)_klvSample.length() });
+            outputSet();
+        }
     }
 }
 
-void Mpeg2TsDecoder::outputXmlSet()
+void Mpeg2TsDecoder::outputSet()
 {
-    /*if (_reads != 0 && _reads >= _klvParser.count())
-    {
-        exit(1);
-    }*/
 
     //std::string xmlSet = _klvParser.xmlSet();
     //_sender.send(xmlSet.c_str(), (int)xmlSet.size());

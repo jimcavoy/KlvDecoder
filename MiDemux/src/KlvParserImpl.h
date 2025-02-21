@@ -1,4 +1,6 @@
 #pragma once
+
+#include "KlvDecodeVisitor.h"
 #include <klvp/klvprsr.h>
 #include <boost/property_tree/ptree.hpp>
 
@@ -17,6 +19,8 @@ public:
     void onError(const char* errmsg, int pos) override;
 
     int count() const;
+
+    const pt::ptree& klvSet() const;
 
 private:
     int         _count{ 0 };

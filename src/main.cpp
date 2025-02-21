@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     int retCode = 0;
     CmdLineParser args;
     std::shared_ptr<std::istream> ifile;
-    std::array<uint8_t, 9212> buffer;
+    std::array<uint8_t, 9212> buffer;    
 
     Banner();
 
@@ -61,14 +61,15 @@ int main(int argc, char* argv[])
         {
             ifile->read((char*)buffer.data(), buffer.size());
             const std::streamsize len = ifile->gcount();
+
+            demux.read(buffer.data(), len);
         }
         else
         {
-            // sometimes we get a bad I/O read so reset the state
-            ifile->clear();
+            gRun = false;
         }
 
-        if (demux.reads() >= args.reads())
+        if (demux.reads() > args.reads() && args.reads() > 0)
         {
             gRun = false;
         }

@@ -23,8 +23,8 @@ public:
 private:
     void processStartPayload(const lcss::TransportPacket& pckt);
     void processPayload(const lcss::TransportPacket& pckt);
-    void processKlv();
-    void outputXmlSet();
+    void processKlv(const lcss::PESPacket& pes);
+    void outputSet();
     void updateSystemClock(const lcss::TransportPacket& pckt);
 
 private:
