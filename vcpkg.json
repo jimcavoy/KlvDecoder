@@ -1,0 +1,10 @@
+{
+  "dependencies": [
+    "boost-algorithm",
+    "boost-json",
+    "boost-program-options",
+    "ms-gsl",
+    "boost-property-tree",
+    "sqlite3"
+  ]
+}
