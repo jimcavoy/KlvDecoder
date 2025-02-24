@@ -4,6 +4,8 @@
 #include <MiDemux/MiDemux.h>
 #include <fcntl.h>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
 
 #include "CmdLineParser.h"
 
@@ -67,7 +69,20 @@ int main(int argc, char* argv[])
 
             demux.setKlvSetCallback([&](const pt::ptree& klvset)
                 {
-                    pt::write_json(std::cout, klvset);
+                    switch (args.format())
+                    {
+                    case CmdLineParser::FORMAT::JSON:
+                        pt::write_json(std::cout, klvset);
+                        break;
+                    case CmdLineParser::FORMAT::XML:
+                        pt::write_xml(std::cout, klvset, pt::xml_parser::trim_whitespace);
+                        break;
+                    case CmdLineParser::FORMAT::INFO:
+                        pt::write_info(std::cout, klvset);
+                        break;
+                    default:
+                        std::cerr << "Unknown Format" << std::endl;
+                    }
                 });
         }
         else

@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <gsl/gsl>
+#include <regex>
 
 #ifdef WIN32
 #include <WinSock2.h>
@@ -51,10 +52,17 @@ namespace
         return ret.str();
     }
 
+    std::string space2underscore(const std::string value)
+    {
+        const auto target = std::regex{ " " };
+        const auto replacement = std::string{ "_" };
+
+        return std::regex_replace(value, target, replacement);
+    }
+
 
     pt::ptree::value_type printString(LDSDatabase& db, const lcss::KLVElementImpl& klv)
     {
-        std::string strKey = std::to_string(klv.key());
         int len = klv.length();
         uint8_t* buf = new uint8_t[len]{};
         klv.value(buf);
@@ -70,11 +78,8 @@ namespace
                 val << hex << buf[i] << dec;
         }
 
-        obj.put(strKey, val.str());
-        pt::ptree::value_type vt("", obj);
-
-        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
-        /*obj["name"] = lds.name;
+        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        /*obj["name"] = space2underscore(lds.name);
         obj["encoded"] = printRaw(klv);
         obj["units"] = lds.units;
         obj["format"] = lds.format;
@@ -83,6 +88,11 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = val.str();*/
 
+        obj.put("key", klv.key());
+        obj.put("value", val.str());
+
+        pt::ptree::value_type vt(space2underscore(lds.name), obj);
+
         delete[] buf;
 
         return vt;
@@ -90,13 +100,9 @@ namespace
 
     pt::ptree::value_type printReal(LDSDatabase& db, const lcss::KLVElementImpl& klv, double val)
     {
-        std::string strKey = std::to_string(klv.key());
-        pt::ptree array;
-        array.put(strKey, val);
+        pt::ptree obj;
 
-        pt::ptree::value_type vt("", array);
-
-        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
@@ -106,6 +112,9 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = val;*/
+        obj.put("key", klv.key());
+        obj.put("value", val);
+        pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
     }
@@ -113,12 +122,7 @@ namespace
     pt::ptree::value_type printInt(LDSDatabase& db, const lcss::KLVElementImpl& klv, int val)
     {
         pt::ptree obj;
-
-        std::string strKey = std::to_string(klv.key());
-        obj.put(strKey, val);
-        pt::ptree::value_type vt("", obj);
-
-        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
@@ -128,21 +132,20 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = val;*/
+        obj.put("key", klv.key());
+        obj.put("value", val);
+        pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
     }
 
     pt::ptree::value_type printToBeImplemented(LDSDatabase& db, const lcss::KLVElementImpl& klv)
     {
-        std::string strKey = std::to_string(klv.key());
         pt::ptree obj;
-        obj.put(strKey, "To be Implemented");
 
-        pt::ptree::value_type vt("", obj);
+        LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
-        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
-
-        /*obj["name"] = lds.name;
+        /*obj["name"] = space2underscore(lds.name);
         obj["encoded"] = printRaw(klv);
         obj["units"] = lds.units;
         obj["format"] = lds.format;
@@ -150,13 +153,15 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = "To Be Implemented";*/
+        obj.put("key", klv.key());
+        obj.put("value", "To be Implemented");
+        pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
     }
 
     pt::ptree::value_type printTimestamp(LDSDatabase& db, const lcss::KLVElementImpl& klv, int64_t tmValue)
     {
-        std::string strKey = std::to_string(klv.key());
 #ifdef WIN32
         struct tm st;
 #else
@@ -178,10 +183,9 @@ namespace
         strftime(szTime, 256, "%A, %d-%b-%y %T", st);
         sprintf(timebuf, "%s.%06d UTC", szTime, usec);
 #endif
-        obj.put(strKey, std::string(timebuf));
 
-        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
-        /*obj["name"] = lds.name;
+        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        /*obj["name"] = space2underscore(lds.name);
         obj["encoded"] = printRaw(klv);
         obj["units"] = lds.units;
         obj["format"] = lds.format;
@@ -189,8 +193,10 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = timebuf;*/
+        obj.put("key", klv.key());
+        obj.put("value", std::string(timebuf));
 
-        pt::ptree::value_type vt("", obj);
+        pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
     }
@@ -225,12 +231,11 @@ namespace
 KLVDecodeVisitor::KLVDecodeVisitor(pt::ptree& klvSet, const char* databaseUri)
     : _klvSet(klvSet)
 {
-    //_ldsDb.connect(databaseUri);
+    _ldsDb.connect(databaseUri);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
 {
-    std::string strKey = std::to_string(klv.key());
     const int len = klv.length();
     uint16_t key = (uint16_t)klv.key();
     uint8_t* val = new uint8_t[len]{};
@@ -249,8 +254,9 @@ void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
     obj["length"] = klv.length();
     obj["value"] = strval.str();*/
 
-    obj.put(strKey, strval.str());
-    pt::ptree::value_type vt("", obj);
+    obj.put("key", klv.key());
+    obj.put("value", strval.str());
+    pt::ptree::value_type vt("UNKNOWN", obj);
 
     _klvSet.push_back(vt);
     delete[] val;
@@ -258,7 +264,6 @@ void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
 
 void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
 {
-    std::string strKey = std::to_string(klv.key());
     const int len = klv.length();
     uint16_t key = (uint16_t)klv.key();
     uint8_t* val = new uint8_t[len]{};
@@ -278,8 +283,9 @@ void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
     obj["what"] = klv.what_;
     obj["value"] = strval.str();*/
 
-    obj.put(strKey, strval.str());
-    pt::ptree::value_type vt("", obj);
+    obj.put("key", klv.key());
+    obj.put("value", strval.str());
+    pt::ptree::value_type vt("PARSE ERROR", obj);
 
     _klvSet.push_back(vt);
     delete[] val;
@@ -287,7 +293,6 @@ void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
 
 void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
 {
-    std::string strKey = std::to_string(klv.key());
     uint8_t val[2];
     memset(val, 0, 2);
     klv.value(val);
@@ -296,7 +301,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
     pt::ptree obj;
 
     LDSEntry lds = fetchKlvDefinition(_ldsDb, klv.key());
-    /*obj["name"] = lds.name;
+    /*obj["name"] = space2underscore(lds.name);
     obj["encoded"] = printRaw(klv);
     obj["units"] = lds.units;
     obj["format"] = lds.format;
@@ -304,9 +309,9 @@ void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = crc;*/
-
-    obj.put(strKey, std::string(crc));
-    pt::ptree::value_type vt("", obj);
+    obj.put("key", klv.key());
+    obj.put("value", std::string(crc));
+    pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
     _klvSet.push_back(vt);
 }
@@ -584,13 +589,15 @@ void KLVDecodeVisitor::Visit(lcss::KLVTargetErrorEstimateLE90& klv)
 
 void KLVDecodeVisitor::Visit(lcss::KLVGenericFlagData01& klv)
 {
-    pt::ptree::value_type obj;
+    pt::ptree obj;
     /*obj["name"] = "Generic Flag Data 01";
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = *klv.value();*/
-
-    _klvSet.push_back(obj);
+    obj.put("key", klv.key());
+    obj.put("value", *klv.value());
+    pt::ptree::value_type vt("Generic Flag Data 01", obj);
+    _klvSet.push_back(vt);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVSecurityLocalMetadataSet& klv)
@@ -891,8 +898,8 @@ void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
         value[15], value[16], value[17]);
 
     pt::ptree obj;
-    /*LDSEntry lds = fetchKlvDefinition(_ldsDb, klv.key());
-    obj["name"] = lds.name;
+    LDSEntry lds = fetchKlvDefinition(_ldsDb, klv.key());
+     /*obj["name"] = space2underscore(lds.name);
     obj["encoded"] = printRaw(klv);
     obj["units"] = lds.units;
     obj["format"] = lds.format;
@@ -900,8 +907,9 @@ void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = uuid;*/
-    obj.put(strKey, std::string(uuid));
-    pt::ptree::value_type vt("", obj);
+    obj.put("key", klv.key());
+    obj.put("value", std::string(uuid));
+    pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
     _klvSet.push_back(vt);
 }
@@ -1187,11 +1195,12 @@ void KLVDecodeVisitor::Visit(lcss::UniversalMetadataElement& klv)
     {
         strval << "0x" << setw(2) << setfill('0') << hex << (int)val[i] << " ";
     }
-    obj.put(std::string(szKey), strval.str());
+    obj.put("key", szKey);
+    obj.put("value", strval.str());
 
     //obj["value"] = strval.str();
 
-    pt::ptree::value_type vt("", obj);
+    pt::ptree::value_type vt("UniversalSetElement", obj);
     _klvSet.push_back(vt);
     delete[] val;
 }

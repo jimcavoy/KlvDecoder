@@ -10,7 +10,7 @@ public:
     {
         JSON,
         XML,
-        TEXT,
+        INFO,
         UNKNOWN
     };
 
