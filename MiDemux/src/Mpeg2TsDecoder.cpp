@@ -28,6 +28,11 @@ int Mpeg2TsDecoder::reads() const
     return _reads;
 }
 
+void Mpeg2TsDecoder::setCallback(MiDemux::OnKlvSet cb)
+{
+    _onKlvSetCallback = cb;
+}
+
 
 void Mpeg2TsDecoder::processStartPayload(const lcss::TransportPacket& pckt)
 {
@@ -90,52 +95,54 @@ void Mpeg2TsDecoder::processPayload(const lcss::TransportPacket& pckt)
 
 void Mpeg2TsDecoder::processKlv(const lcss::PESPacket& pes)
 {
-    _reads++;
-    UINT64 timeNow = _systemClock.time();
-    UINT64 diff = timeNow - _time;
-    BYTE stream_id = pes.stream_id();
+    uint64_t timeNow = _systemClock.time();
+    uint64_t diff = timeNow - _time;
+    uint8_t stream_id = pes.stream_id();
 
-    //if (diff > _interval)
-    /*{
-        _time = timeNow;
-        _klvParser.parse({ (uint8_t*)_klvSample.data(), _klvSample.length() });
-        outputXmlSet();
-    }*/
-
-    if (stream_id == 0xFC)
+    if (diff > _interval)
     {
-        lcss::MetadataAUWrapper wrapper;
-        size_t count = wrapper.parse((BYTE*)_klvSample.data(), _klvSample.length());
-
-        if (count > 0)
+        _time = timeNow;
+        if (stream_id == 0xFC)
         {
-            lcss::MetadataAUWrapper::const_iterator it;
-            for (it = wrapper.begin(); it != wrapper.end(); ++it)
+            lcss::MetadataAUWrapper wrapper;
+            size_t count = wrapper.parse((BYTE*)_klvSample.data(), _klvSample.length());
+
+            if (count > 0)
             {
-                _klvParser.parse({ (BYTE*)it->AU_cell_data_bytes(), (UINT32)it->AU_cell_data_length() });
+                lcss::MetadataAUWrapper::const_iterator it;
+                for (it = wrapper.begin(); it != wrapper.end(); ++it)
+                {
+                    _klvParser.parse({ (BYTE*)it->AU_cell_data_bytes(), (UINT32)it->AU_cell_data_length() });
+                    outputSet();
+                }
+                return;
+            }
+            else // missed labeled metadata stream
+            {
+                stream_id = 0xBD;
+            }
+
+            if (stream_id == 0xBD)
+            {
+                _klvParser.parse({ (BYTE*)_klvSample.data(), (UINT32)_klvSample.length() });
                 outputSet();
             }
-            return;
-        }
-        else // missed labeled metadata stream
-        {
-            stream_id = 0xBD;
-        }
-
-        if (stream_id == 0xBD)
-        {
-            _klvParser.parse({ (BYTE*)_klvSample.data(), (UINT32)_klvSample.length() });
-            outputSet();
         }
     }
 }
 
 void Mpeg2TsDecoder::outputSet()
 {
-
-    //std::string xmlSet = _klvParser.xmlSet();
-    //_sender.send(xmlSet.c_str(), (int)xmlSet.size());
-    //_klvParser.reset();
+    _reads++;
+    if (_onKlvSetCallback)
+    {
+        _onKlvSetCallback(_klvParser.klvSet());
+        _klvParser.clear();
+    }
+    else
+    {
+        _klvParser.clear();
+    }
 }
 
 void Mpeg2TsDecoder::updateSystemClock(const lcss::TransportPacket& pckt)

@@ -54,10 +54,12 @@ namespace
 
     pt::ptree::value_type printString(LDSDatabase& db, const lcss::KLVElementImpl& klv)
     {
+        std::string strKey = std::to_string(klv.key());
         int len = klv.length();
         uint8_t* buf = new uint8_t[len]{};
         klv.value(buf);
-        pt::ptree::value_type ret;
+        pt::ptree obj;
+
         std::stringstream val;
 
         for (int i = 0; i < len; i++)
@@ -68,7 +70,10 @@ namespace
                 val << hex << buf[i] << dec;
         }
 
-        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        obj.put(strKey, val.str());
+        pt::ptree::value_type vt("", obj);
+
+        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
         obj["units"] = lds.units;
@@ -80,13 +85,18 @@ namespace
 
         delete[] buf;
 
-        return ret;
+        return vt;
     }
 
     pt::ptree::value_type printReal(LDSDatabase& db, const lcss::KLVElementImpl& klv, double val)
     {
-        pt::ptree::value_type obj;
-        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        std::string strKey = std::to_string(klv.key());
+        pt::ptree array;
+        array.put(strKey, val);
+
+        pt::ptree::value_type vt("", array);
+
+        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
@@ -97,14 +107,18 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = val;*/
 
-        return obj;
+        return vt;
     }
 
     pt::ptree::value_type printInt(LDSDatabase& db, const lcss::KLVElementImpl& klv, int val)
     {
-        pt::ptree::value_type obj;
+        pt::ptree obj;
 
-        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        std::string strKey = std::to_string(klv.key());
+        obj.put(strKey, val);
+        pt::ptree::value_type vt("", obj);
+
+        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
@@ -115,14 +129,18 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = val;*/
 
-        return obj;
+        return vt;
     }
 
     pt::ptree::value_type printToBeImplemented(LDSDatabase& db, const lcss::KLVElementImpl& klv)
     {
-        pt::ptree::value_type obj;
+        std::string strKey = std::to_string(klv.key());
+        pt::ptree obj;
+        obj.put(strKey, "To be Implemented");
 
-        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        pt::ptree::value_type vt("", obj);
+
+        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
 
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
@@ -133,11 +151,12 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = "To Be Implemented";*/
 
-        return obj;
+        return vt;
     }
 
     pt::ptree::value_type printTimestamp(LDSDatabase& db, const lcss::KLVElementImpl& klv, int64_t tmValue)
     {
+        std::string strKey = std::to_string(klv.key());
 #ifdef WIN32
         struct tm st;
 #else
@@ -145,7 +164,7 @@ namespace
 #endif
         char timebuf[512]{};
         char szTime[256]{};
-        pt::ptree::value_type obj;
+        pt::ptree obj;
 
         int usec = tmValue % 1000000; // microseconds
         time_t time = (time_t)tmValue / 1e6; // seconds
@@ -159,8 +178,9 @@ namespace
         strftime(szTime, 256, "%A, %d-%b-%y %T", st);
         sprintf(timebuf, "%s.%06d UTC", szTime, usec);
 #endif
+        obj.put(strKey, std::string(timebuf));
 
-        LDSEntry lds = fetchKlvDefinition(db, klv.key());
+        //LDSEntry lds = fetchKlvDefinition(db, klv.key());
         /*obj["name"] = lds.name;
         obj["encoded"] = printRaw(klv);
         obj["units"] = lds.units;
@@ -170,7 +190,9 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = timebuf;*/
 
-        return obj;
+        pt::ptree::value_type vt("", obj);
+
+        return vt;
     }
 
     int encodeBERLength(uint8_t* buffer, int len)
@@ -203,17 +225,18 @@ namespace
 KLVDecodeVisitor::KLVDecodeVisitor(pt::ptree& klvSet, const char* databaseUri)
     : _klvSet(klvSet)
 {
-    _ldsDb.connect(databaseUri);
+    //_ldsDb.connect(databaseUri);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
 {
+    std::string strKey = std::to_string(klv.key());
     const int len = klv.length();
     uint16_t key = (uint16_t)klv.key();
     uint8_t* val = new uint8_t[len]{};
     klv.value(val);
     std::stringstream strval;
-    pt::ptree::value_type obj;
+    pt::ptree obj;
 
     for (int i = 0; i < len; i++)
     {
@@ -226,17 +249,21 @@ void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
     obj["length"] = klv.length();
     obj["value"] = strval.str();*/
 
-    _klvSet.push_back(obj);
+    obj.put(strKey, strval.str());
+    pt::ptree::value_type vt("", obj);
+
+    _klvSet.push_back(vt);
     delete[] val;
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
 {
+    std::string strKey = std::to_string(klv.key());
     const int len = klv.length();
     uint16_t key = (uint16_t)klv.key();
     uint8_t* val = new uint8_t[len]{};
     klv.value(val);
-    pt::ptree::value_type obj;
+    pt::ptree obj;
     std::stringstream strval;
 
     for (int i = 0; i < len; i++)
@@ -251,18 +278,22 @@ void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
     obj["what"] = klv.what_;
     obj["value"] = strval.str();*/
 
-    _klvSet.push_back(obj);
+    obj.put(strKey, strval.str());
+    pt::ptree::value_type vt("", obj);
+
+    _klvSet.push_back(vt);
     delete[] val;
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
 {
+    std::string strKey = std::to_string(klv.key());
     uint8_t val[2];
     memset(val, 0, 2);
     klv.value(val);
     char crc[16];
     sprintf(crc, "%#4.2x %#4.2x", val[0], val[1]);
-    pt::ptree::value_type obj;
+    pt::ptree obj;
 
     LDSEntry lds = fetchKlvDefinition(_ldsDb, klv.key());
     /*obj["name"] = lds.name;
@@ -274,7 +305,10 @@ void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
     obj["length"] = klv.length();
     obj["value"] = crc;*/
 
-    _klvSet.push_back(obj);
+    obj.put(strKey, std::string(crc));
+    pt::ptree::value_type vt("", obj);
+
+    _klvSet.push_back(vt);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVUNIXTimeStamp& klv)
@@ -846,6 +880,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVPlatformSideslipAngleFull& klv)
 
 void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
 {
+    std::string strKey = std::to_string(klv.key());
     uint8_t value[18]{};
     klv.value(value);
     char uuid[BUFSIZ]{};
@@ -855,7 +890,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
         value[8], value[9], value[10], value[11], value[12], value[13], value[14],
         value[15], value[16], value[17]);
 
-    pt::ptree::value_type obj;
+    pt::ptree obj;
     /*LDSEntry lds = fetchKlvDefinition(_ldsDb, klv.key());
     obj["name"] = lds.name;
     obj["encoded"] = printRaw(klv);
@@ -865,8 +900,10 @@ void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = uuid;*/
+    obj.put(strKey, std::string(uuid));
+    pt::ptree::value_type vt("", obj);
 
-    _klvSet.push_back(obj);
+    _klvSet.push_back(vt);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVSARMotionImageryMetadata& klv)
@@ -1137,7 +1174,7 @@ void KLVDecodeVisitor::Visit(lcss::UniversalMetadataElement& klv)
     char szKey[BUFSIZ]{};
     uint8_t* val = new uint8_t[len]{};
     klv.value(val);
-    pt::ptree::value_type obj;
+    pt::ptree obj;
     std::stringstream strval;
 
     sprintf(szKey, "%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X",
@@ -1150,9 +1187,12 @@ void KLVDecodeVisitor::Visit(lcss::UniversalMetadataElement& klv)
     {
         strval << "0x" << setw(2) << setfill('0') << hex << (int)val[i] << " ";
     }
+    obj.put(std::string(szKey), strval.str());
 
     //obj["value"] = strval.str();
-    _klvSet.push_back(obj);
+
+    pt::ptree::value_type vt("", obj);
+    _klvSet.push_back(vt);
     delete[] val;
 }
 

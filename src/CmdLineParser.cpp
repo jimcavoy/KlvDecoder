@@ -41,7 +41,7 @@ int CmdLineParser::parse(int argc, char** argv)
             ("help,?", "Produce help message.")
             ("source", po::value<string>(&_pimpl->_source), "Source Motion Imagery stream or file. (default: - )")
             ("reads,r", po::value<int>(&_pimpl->_reads), "Number of KLV reads. Zero means continuous reads. (default: 0")
-            ("freqs,f", po::value<float>(&_pimpl->_frequency), "Frequency (Hz) to output the text representation.")
+            ("freqs,f", po::value<float>(&_pimpl->_frequency), "Frequency (Hz) to output the text representation. (default: 1)")
             ("format,F", po::value<std::string>(&_pimpl->_format), "Output text format [json|text|xml]. (default: json).")
             ;
 

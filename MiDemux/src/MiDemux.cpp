@@ -34,3 +34,8 @@ int MiDemux::reads() const
 {
     return _pimpl->_decoder->reads();
 }
+
+void MiDemux::setKlvSetCallback(MiDemux::OnKlvSet cb)
+{
+    _pimpl->_decoder->setCallback(cb);
+}

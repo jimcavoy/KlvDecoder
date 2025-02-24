@@ -3,6 +3,7 @@
 #include <iostream>
 #include <MiDemux/MiDemux.h>
 #include <fcntl.h>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "CmdLineParser.h"
 
@@ -26,7 +27,7 @@ int main(int argc, char* argv[])
     int retCode = 0;
     CmdLineParser args;
     std::shared_ptr<std::istream> ifile;
-    std::array<uint8_t, 9212> buffer;    
+    std::array<uint8_t, 9212> buffer;
 
     Banner();
 
@@ -63,13 +64,18 @@ int main(int argc, char* argv[])
             const std::streamsize len = ifile->gcount();
 
             demux.read(buffer.data(), len);
+
+            demux.setKlvSetCallback([&](const pt::ptree& klvset)
+                {
+                    pt::write_json(std::cout, klvset);
+                });
         }
         else
         {
             gRun = false;
         }
 
-        if (demux.reads() > args.reads() && args.reads() > 0)
+        if (demux.reads() >= args.reads() && args.reads() > 0)
         {
             gRun = false;
         }

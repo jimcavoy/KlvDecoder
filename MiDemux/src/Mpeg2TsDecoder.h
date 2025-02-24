@@ -6,6 +6,7 @@
 #include "AccessUnit.h"
 #include "Clock.h"
 #include "KlvParserImpl.h"
+#include "MiDemux.h"
 
 
 class CmdLineParser;
@@ -19,6 +20,8 @@ public:
     void onPacket(lcss::TransportPacket& pckt);
 
     int reads() const;
+
+    void setCallback(MiDemux::OnKlvSet cb);
 
 private:
     void processStartPayload(const lcss::TransportPacket& pckt);
@@ -38,5 +41,7 @@ private:
     PCRClock _pcrClock;
     SystemClock _systemClock;
     KlvParserImpl _klvParser;
+    MiDemux::OnKlvSet _onKlvSetCallback{};
+
 };
 

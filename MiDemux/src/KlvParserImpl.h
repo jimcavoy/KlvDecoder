@@ -21,9 +21,11 @@ public:
     int count() const;
 
     const pt::ptree& klvSet() const;
+    void clear();
 
 private:
     int         _count{ 0 };
     lcss::TYPE  _type{ lcss::TYPE::LOCAL_SET };
     pt::ptree   _klvSet;
+    pt::ptree   _elements;
 };
