@@ -39,8 +39,36 @@ target_link_libraries(KlvDecoder
 install(TARGETS KlvDecoder)
 
 # Test cases
-# enable_testing()
+enable_testing()
 
-# add_test(NAME Parse
-  # COMMAND avc2json ${PROJECT_SOURCE_DIR}/sample/svt_testset_420_720p50_klved_4774.h264
-# )
+add_test(NAME OutputJson
+  COMMAND KlvDecoder ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts
+)
+set_tests_properties(OutputJson
+  PROPERTIES PASS_REGULAR_EXPRESSION "{
+    \"metadata_set\": {
+        \"UNIX_Time_Stamp\": {
+            \"key\": \"2\",
+            \"value\": \"Friday, 16-Jun-17 14:26:20.616000 UTC\"
+        },"
+)
+
+add_test(NAME OutputXml
+  COMMAND KlvDecoder ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts -F xml
+)
+set_tests_properties(OutputXml
+  PROPERTIES PASS_REGULAR_EXPRESSION "<metadata_set><UNIX_Time_Stamp><key>2</key><value>Friday, 16-Jun-17 14:26:20.616000 UTC</value></UNIX_Time_Stamp>"
+)
+
+add_test(NAME OutputInfo
+  COMMAND KlvDecoder ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts -F info
+)
+set_tests_properties(OutputInfo
+  PROPERTIES PASS_REGULAR_EXPRESSION "metadata_set
+{
+    UNIX_Time_Stamp
+    {
+        key 2
+        value \"Friday, 16-Jun-17 14:26:20.616000 UTC\"
+    }"
+)
