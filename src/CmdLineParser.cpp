@@ -14,7 +14,7 @@ public:
     int _reads{ 0 };
     float _frequency{ 1 };
     std::string _format{ "json" };
-    std::string _source;
+    std::string _source{ "-" };
 };
 
 CmdLineParser::CmdLineParser()
