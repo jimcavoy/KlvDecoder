@@ -31,6 +31,8 @@ find_package(Microsoft.GSL CONFIG REQUIRED)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS property_tree)
 
+file(COPY ${klvp_DIR}/../../../share/klv.s3db DESTINATION ${CMAKE_BINARY_DIR})
+
 add_library(MiDemux STATIC)
 
 target_sources(MiDemux 
