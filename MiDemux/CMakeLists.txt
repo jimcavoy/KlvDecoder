@@ -45,6 +45,10 @@ target_sources(MiDemux
     src/KlvDecodeVisitor.cpp
     src/KlvParserImpl.h
     src/KlvParserImpl.cpp
+    src/KlvSecuritySetParserImpl.h
+    src/KlvSecuritySetParserImpl.cpp
+    src/KlvSecuritySetVisitor.h
+    src/KlvSecuritySetVisitor.cpp
     src/MiDemux.cpp
     src/Mpeg2TsDecoder.h
     src/Mpeg2TsDecoder.cpp

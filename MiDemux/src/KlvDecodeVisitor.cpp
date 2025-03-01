@@ -1,5 +1,8 @@
 #include "KlvDecodeVisitor.h"
 
+#include "KlvSecuritySetParserImpl.h"
+#include "KlvSecuritySetVisitor.h"
+
 #include <klvp/decode.h>
 #include <iostream>
 #include <iomanip>
@@ -596,27 +599,30 @@ void KLVDecodeVisitor::Visit(lcss::KLVGenericFlagData01& klv)
     obj["value"] = *klv.value();*/
     obj.put("key", klv.key());
     obj.put("value", *klv.value());
-    pt::ptree::value_type vt("Generic Flag Data 01", obj);
+    pt::ptree::value_type vt("Generic_Flag_Data_01", obj);
     _klvSet.push_back(vt);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVSecurityLocalMetadataSet& klv)
 {
-    //uint8_t ss[0x0FFF]{};
-    //uint8_t value[0x0FFF]{};
-    //klv.value(value);
-    //ss[0] = 0x30;
+    uint8_t ss[0x0FFF]{};
+    uint8_t value[0x0FFF]{};
+    klv.value(value);
+    ss[0] = 0x30;
 
-    //int numOfBytesEncoded = encodeBERLength(ss + 1, klv.length());
-    //numOfBytesEncoded++; // add one for the key
-    //memcpy(ss + numOfBytesEncoded, value, klv.length());
+    int numOfBytesEncoded = encodeBERLength(ss + 1, klv.length());
+    numOfBytesEncoded++; // add one for the key
+    memcpy(ss + numOfBytesEncoded, value, klv.length());
 
-    //KLVSecuritySetPrintVisitor pv(_ldsDb);
-    //TestKLVSecuritySetParser ssp(pv);
-    //const int len = klv.length() + numOfBytesEncoded;
-    //ssp.parse({ ss, gsl::narrow_cast<std::size_t>(len) });
+    pt::ptree array;
+    KlvSecuritySetVisitor pv(array, _ldsDb);
+    KlvSecuritySetParserImpl ssp(pv);
+    const int len = klv.length() + numOfBytesEncoded;
+    ssp.parse({ ss, gsl::narrow_cast<std::size_t>(len) });
 
-    //_klvSet.push_back(ssp.securitySet());
+    pt::ptree::value_type vt("Security_Set", array);
+
+    _klvSet.push_back(vt);
 }
 
 void KLVDecodeVisitor::Visit(lcss::KLVDifferentialPressure& klv)
