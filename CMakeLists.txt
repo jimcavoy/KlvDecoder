@@ -13,28 +13,44 @@ include(GNUInstallDirs)
 add_subdirectory (MiDemux)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS algorithm json program_options)
+find_package(Boost REQUIRED COMPONENTS algorithm json program_options url)
 
 add_executable(KlvDecoder)
 
 target_sources(KlvDecoder
   PRIVATE
     src/main.cpp
-	src/CmdLineParser.cpp
-	src/CmdLineParser.h
+    src/CmdLineParser.cpp
+    src/CmdLineParser.h
+    src/UdpSender.cpp
+    src/UdpSender.h
 )
 
 target_include_directories(KlvDecoder
   PRIVATE
     ${Boost_INCLUDE_DIRS})
 
+if (WIN32)
 target_link_libraries(KlvDecoder 
   PRIVATE
     MiDemux
     Boost::algorithm
     Boost::json
     Boost::program_options
+    Boost::url
+    wsock32
+    ws2_32
 )
+else()
+target_link_libraries(KlvDecoder 
+  PRIVATE
+    MiDemux
+    Boost::algorithm
+    Boost::json
+    Boost::program_options
+    Boost::url
+)
+endif()
 
 install(TARGETS KlvDecoder)
 

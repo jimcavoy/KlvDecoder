@@ -23,6 +23,7 @@ public:
     float frequency() const;
     FORMAT format() const;
     std::string source() const;
+    std::string outputUrl() const;
 
 private:
     class Impl;

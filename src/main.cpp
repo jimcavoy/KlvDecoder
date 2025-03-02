@@ -1,13 +1,16 @@
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <MiDemux/MiDemux.h>
 #include <fcntl.h>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/info_parser.hpp>
+#include <boost/url.hpp>
 
 #include "CmdLineParser.h"
+#include "UdpSender.h"
 
 #ifdef _WIN32
 #include <io.h>
@@ -16,6 +19,68 @@
 #endif
 
 bool gRun = true;
+
+class UrlParser
+{
+public:
+    UrlParser() {}
+
+    void parse(std::string strurl)
+    {
+        using namespace boost;
+        namespace url = boost::urls; 
+
+        if (strurl.empty())
+            return;
+
+        if (strurl == "-")
+            return;
+
+        system::result<url::url_view> res = url::parse_uri(strurl);
+
+        url::url_view urlView = res.value();
+        
+        if (!res)
+            return;
+
+        schema = urlView.scheme();
+        ipaddress = urlView.host();
+
+        if (urlView.has_port())
+        {
+            port = urlView.port_number();
+        }
+
+        if (urlView.has_query())
+        {
+            url::params_encoded_view params_ref = urlView.encoded_params();
+
+            for (const auto& v : params_ref)
+            {
+                url::decode_view dk(v.key);
+                url::decode_view dv(v.value);
+
+                if (dk == "ttl")
+                {
+                    std::string strTTL = std::string(dv.begin(), dv.end());
+                    ttl = (uint8_t)std::stoi(strTTL);
+                }
+                else if (dk == "localaddr")
+                {
+                    std::string strVal(dv.begin(), dv.end());
+                    ifaceaddress = strVal;
+                }
+            }
+        }
+    }
+
+public:
+    std::string schema;
+    std::string ipaddress{ "-" };
+    uint16_t port{ 0 };
+    uint8_t ttl{ 255 };
+    std::string ifaceaddress;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Forward Declarations
@@ -39,6 +104,9 @@ int main(int argc, char* argv[])
     }
 
     MiDemux demux(args.frequency());
+    UrlParser urlp;
+    urlp.parse(args.outputUrl());
+    UdpSender writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
 
     if (args.source() == "-")
     {
@@ -69,19 +137,25 @@ int main(int argc, char* argv[])
 
             demux.setKlvSetCallback([&](const pt::ptree& klvset)
                 {
+                    std::stringstream output;
                     switch (args.format())
                     {
                     case CmdLineParser::FORMAT::JSON:
-                        pt::write_json(std::cout, klvset);
+                        pt::write_json(output, klvset);
                         break;
                     case CmdLineParser::FORMAT::XML:
-                        pt::write_xml(std::cout, klvset, pt::xml_parser::trim_whitespace);
+                        pt::write_xml(output, klvset, pt::xml_parser::trim_whitespace);
                         break;
                     case CmdLineParser::FORMAT::INFO:
-                        pt::write_info(std::cout, klvset);
+                        pt::write_info(output, klvset);
                         break;
                     default:
                         std::cerr << "Unknown Format" << std::endl;
+                    }
+
+                    if (!output.str().empty())
+                    {
+                        writer.send(output.str().c_str(), output.str().length());
                     }
                 });
         }
