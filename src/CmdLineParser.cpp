@@ -15,6 +15,7 @@ public:
     float _frequency{ 1 };
     std::string _format{ "json" };
     std::string _source{ "-" };
+    std::string _outputUrl{ "-" };
 };
 
 CmdLineParser::CmdLineParser()
@@ -43,6 +44,7 @@ int CmdLineParser::parse(int argc, char** argv)
             ("reads,r", po::value<int>(&_pimpl->_reads), "Number of KLV reads. Zero means continuous reads. (default: 0")
             ("freqs,f", po::value<float>(&_pimpl->_frequency), "Frequency (Hz) to output the text representation. (default: 1)")
             ("format,F", po::value<std::string>(&_pimpl->_format), "Output text format [info|json|xml]. (default: json).")
+            ("outputUrl,o", po::value<std::string>(&_pimpl->_outputUrl), "Stream the text representation over UDP. If the option is missing, output to console. (default: - )")
             ;
 
         po::command_line_parser parser{ argc, argv };
@@ -103,4 +105,9 @@ CmdLineParser::FORMAT CmdLineParser::format() const
 std::string CmdLineParser::source() const
 {
     return _pimpl->_source;
+}
+
+std::string CmdLineParser::outputUrl() const
+{
+    return _pimpl->_outputUrl;
 }

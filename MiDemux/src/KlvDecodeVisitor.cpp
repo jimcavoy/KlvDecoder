@@ -91,7 +91,7 @@ namespace
         obj["length"] = klv.length();
         obj["value"] = val.str();*/
 
-        obj.put("key", klv.key());
+        obj.put<int>("key", klv.key());
         obj.put("value", val.str());
 
         pt::ptree::value_type vt(space2underscore(lds.name), obj);
@@ -115,8 +115,8 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = val;*/
-        obj.put("key", klv.key());
-        obj.put("value", val);
+        obj.put<int>("key", klv.key());
+        obj.put<float>("value", val);
         pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
@@ -135,8 +135,8 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = val;*/
-        obj.put("key", klv.key());
-        obj.put("value", val);
+        obj.put<int>("key", klv.key());
+        obj.put<int>("value", val);
         pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
         return vt;
@@ -156,7 +156,7 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = "To Be Implemented";*/
-        obj.put("key", klv.key());
+        obj.put<int>("key", klv.key());
         obj.put("value", "To be Implemented");
         pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
@@ -196,7 +196,7 @@ namespace
         obj["key"] = klv.key();
         obj["length"] = klv.length();
         obj["value"] = timebuf;*/
-        obj.put("key", klv.key());
+        obj.put<int>("key", klv.key());
         obj.put("value", std::string(timebuf));
 
         pt::ptree::value_type vt(space2underscore(lds.name), obj);
@@ -257,7 +257,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVUnknown& klv)
     obj["length"] = klv.length();
     obj["value"] = strval.str();*/
 
-    obj.put("key", klv.key());
+    obj.put<int>("key", klv.key());
     obj.put("value", strval.str());
     pt::ptree::value_type vt("UNKNOWN", obj);
 
@@ -286,7 +286,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVParseError& klv)
     obj["what"] = klv.what_;
     obj["value"] = strval.str();*/
 
-    obj.put("key", klv.key());
+    obj.put<int>("key", klv.key());
     obj.put("value", strval.str());
     pt::ptree::value_type vt("PARSE ERROR", obj);
 
@@ -312,7 +312,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVChecksum& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = crc;*/
-    obj.put("key", klv.key());
+    obj.put<int>("key", klv.key());
     obj.put("value", std::string(crc));
     pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
@@ -597,7 +597,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVGenericFlagData01& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = *klv.value();*/
-    obj.put("key", klv.key());
+    obj.put<int>("key", klv.key());
     obj.put("value", *klv.value());
     pt::ptree::value_type vt("Generic_Flag_Data_01", obj);
     _klvSet.push_back(vt);
@@ -913,7 +913,7 @@ void KLVDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
     obj["key"] = klv.key();
     obj["length"] = klv.length();
     obj["value"] = uuid;*/
-    obj.put("key", klv.key());
+    obj.put<int>("key", klv.key());
     obj.put("value", std::string(uuid));
     pt::ptree::value_type vt(space2underscore(lds.name), obj);
 

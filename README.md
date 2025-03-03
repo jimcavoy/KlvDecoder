@@ -65,18 +65,32 @@ The `-C` option specifies the build configuration to test, either `Debug` or `Re
 KlvDecoder v1.0.0
 Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com
 Allowed options.:
-  -? [ --help ]         Produce help message.
-  --source arg          Source Motion Imagery stream or file. (default: - )
-  -r [ --reads ] arg    Number of KLV reads. Zero means continuous reads.
-                        (default: 0
-  -f [ --freqs ] arg    Frequency (Hz) to output the text representation.
-                        (default: 1)
-  -F [ --format ] arg   Output text format [info|json|xml]. (default: json).
+  -? [ --help ]          Produce help message.
+  --source arg           Source Motion Imagery stream or file. (default: - )
+  -r [ --reads ] arg     Number of KLV reads. Zero means continuous reads.
+                         (default: 0
+  -f [ --freqs ] arg     Frequency (Hz) to output the text representation.
+                         (default: 1)
+  -F [ --format ] arg    Output text format [info|json|xml]. (default: json).
+  -o [ --outputUrl ] arg Stream the text representation over UDP. If the option
+                         is missing, output to console. (default: - )
+```
+The `--outputUrl` option has an optional query component with the following attribute-value pairs:
+
+- __ttl__. The time-to-live parameter.
+- __localaddr__. Transmit on a network adapter with an assigned IP address.
+
+For example, you want to stream using UDP on a multicast address of 239.3.1.11 with a time-to-live of 16 and transmit
+onto a network adapter with an assigned IP address of 192.168.0.24:
+
+```
+--outputUrl=udp://239.3.1.11:50000?ttl=16&localaddr=192.168.0.24
 ```
 
+__Note__: Presently, __KlvDecoder__ only supports UDP protocol.
 ## Examples
 
-### Read a File
+### 1. Read a File
 In this example, output a JSON representation of the KLV encoded metadata from a
 STANAG 4609 Motion Imagery file.
 
@@ -84,10 +98,17 @@ STANAG 4609 Motion Imagery file.
 KlvDeoder C:\somefolder\sample_file.ts -F json
 ```
 
-### Read a Stream
-In this example, output an XML representation of the KLV encoded metadata from a 
+### 2. Read a Stream
+In this example, output to console an XML representation of the KLV encoded metadata from a 
 STANAG 4609 stream being piped in from __IReflxApp__ application.
 
 ```
 IReflxApp.exe -s 239.255.0.1:1841 | KlvDecoder.exe -F xml
+```
+
+### 3. Read a Stream and Stream the Result
+In this example, stream the XML representation over UDP from a STANAG 4609 stream being
+piped in from __IReflxApp__ application.
+```
+IReflxApp.exe -s 239.255.0.1:1841 | KlvDecoder.exe -F xml --outputUrl=udp://239.3.1.11:50000
 ```
