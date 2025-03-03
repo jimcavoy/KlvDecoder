@@ -190,20 +190,33 @@ void UdpSender::send(const char* data, size_t length)
     }
     else // Send the data onto a socket
     {
-        const int status = sendto(_pimpl->_socket,
-            data,
-            (int)length,
-            0,
-            (SOCKADDR*)&_pimpl->_recvAddr,
-            sizeof(_pimpl->_recvAddr));
-
-        if (status == SOCKET_ERROR)
+        int bufsiz = 1000;
+        int nLeft = length;
+        size_t i = 0;
+        while (i < length)
         {
+            if (nLeft < bufsiz)
+            {
+                bufsiz = nLeft;
+            }
+
+            const int status = sendto(_pimpl->_socket,
+                data+i,
+                bufsiz,
+                0,
+                (SOCKADDR*)&_pimpl->_recvAddr,
+                sizeof(_pimpl->_recvAddr));
+
+            if (status == SOCKET_ERROR)
+            {
 #ifdef _WIN32
-            const UINT32 errCode = WSAGetLastError();
+                const UINT32 errCode = WSAGetLastError();
 #else
-            const int errCode = errno;
+                const int errCode = errno;
 #endif
+            }
+            i += 1000;
+            nLeft -= 1000;
         }
     }
 }

@@ -103,71 +103,84 @@ int main(int argc, char* argv[])
         return retCode;
     }
 
-    MiDemux demux(args.frequency());
-    UrlParser urlp;
-    urlp.parse(args.outputUrl());
-    UdpSender writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
-
-    if (args.source() == "-")
+    try
     {
+        MiDemux demux(args.frequency());
+        UrlParser urlp;
+        urlp.parse(args.outputUrl());
+        UdpSender writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
+
+        if (args.source() == "-")
+        {
 #ifdef _WIN32
-        _setmode(_fileno(stdin), _O_BINARY);
+            _setmode(_fileno(stdin), _O_BINARY);
 #endif
-        ifile.reset(&std::cin, [](...) {});
-    }
-    else
-    {
-        std::ifstream* tsfile = new std::ifstream(args.source(), std::ios::binary);
-        if (!tsfile->is_open())
-        {
-            std::cerr << "ERROR: Failed to open file, " << args.source() << std::endl;
-            return -1;
-        }
-        ifile.reset(tsfile);
-    }
-
-    while (gRun)
-    {
-        if (ifile->good())
-        {
-            ifile->read((char*)buffer.data(), buffer.size());
-            const std::streamsize len = ifile->gcount();
-
-            demux.read(buffer.data(), len);
-
-            demux.setKlvSetCallback([&](const pt::ptree& klvset)
-                {
-                    std::stringstream output;
-                    switch (args.format())
-                    {
-                    case CmdLineParser::FORMAT::JSON:
-                        pt::write_json(output, klvset);
-                        break;
-                    case CmdLineParser::FORMAT::XML:
-                        pt::write_xml(output, klvset, pt::xml_parser::trim_whitespace);
-                        break;
-                    case CmdLineParser::FORMAT::INFO:
-                        pt::write_info(output, klvset);
-                        break;
-                    default:
-                        std::cerr << "Unknown Format" << std::endl;
-                    }
-
-                    if (!output.str().empty())
-                    {
-                        writer.send(output.str().c_str(), output.str().length());
-                    }
-                });
+            ifile.reset(&std::cin, [](...) {});
         }
         else
         {
-            gRun = false;
+            std::ifstream* tsfile = new std::ifstream(args.source(), std::ios::binary);
+            if (!tsfile->is_open())
+            {
+                std::cerr << "ERROR: Failed to open file, " << args.source() << std::endl;
+                return -1;
+            }
+            ifile.reset(tsfile);
         }
 
-        if (demux.reads() >= args.reads() && args.reads() > 0)
+        while (gRun)
         {
-            gRun = false;
+            if (ifile->good())
+            {
+                ifile->read((char*)buffer.data(), buffer.size());
+                const std::streamsize len = ifile->gcount();
+
+                demux.read(buffer.data(), len);
+
+                demux.setKlvSetCallback([&](const pt::ptree& klvset)
+                    {
+                        std::stringstream output;
+                        switch (args.format())
+                        {
+                        case CmdLineParser::FORMAT::JSON:
+                            pt::write_json(output, klvset, false);
+                            break;
+                        case CmdLineParser::FORMAT::XML:
+                            pt::write_xml(output, klvset, pt::xml_parser::trim_whitespace);
+                            break;
+                        case CmdLineParser::FORMAT::INFO:
+                            pt::write_info(output, klvset);
+                            break;
+                        default:
+                            std::cerr << "Unknown Format" << std::endl;
+                        }
+
+                        if (!output.str().empty())
+                        {
+                            writer.send(output.str().c_str(), output.str().length());
+                        }
+                    });
+            }
+            else
+            {
+                gRun = false;
+            }
+
+            if (demux.reads() >= args.reads() && args.reads() > 0)
+            {
+                gRun = false;
+            }
         }
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "ERROR: " << ex.what() << std::endl;
+        return -1;
+    }
+    catch (...)
+    {
+        std::cerr << "ERROR: Unknown exception caught." << std::endl;
+        return -1;
     }
 
     return retCode;
