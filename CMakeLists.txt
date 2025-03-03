@@ -61,12 +61,7 @@ add_test(NAME OutputJson
   COMMAND KlvDecoder ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts
 )
 set_tests_properties(OutputJson
-  PROPERTIES PASS_REGULAR_EXPRESSION "{
-    \"metadata_set\": {
-        \"UNIX_Time_Stamp\": {
-            \"key\": \"2\",
-            \"value\": \"Friday, 16-Jun-17 14:26:20.616000 UTC\"
-        },"
+  PROPERTIES PASS_REGULAR_EXPRESSION "{\"metadata_set\":{\"UNIX_Time_Stamp\":{\"key\":\"2\",\"value\":\"Friday, 16-Jun-17 14:26:20.616000 UTC\"},"
 )
 
 add_test(NAME OutputXml
@@ -87,4 +82,8 @@ set_tests_properties(OutputInfo
         key 2
         value \"Friday, 16-Jun-17 14:26:20.616000 UTC\"
     }"
+)
+
+add_test(NAME StreamOutput
+  COMMAND KlvDecoder ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --outputUrl=udp://239.3.1.11:50000?ttl=16
 )
