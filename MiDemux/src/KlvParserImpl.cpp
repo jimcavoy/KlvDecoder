@@ -2,6 +2,12 @@
 
 #include "KlvDecodeVisitor.h"
 
+#ifdef WIN32
+const char* dbUrl = "file:///C:/PROGRA~1/klvp/share/klv.s3db";
+#else
+const char* dbUrl = "file:///usr/local/share/klv.s3db";
+#endif
+
 KlvParserImpl::KlvParserImpl()
 {
     validateChecksum(true);
@@ -21,7 +27,7 @@ void KlvParserImpl::onElement(lcss::KLVElement& klv)
 {
     lcss::KLVParser::onElement(klv);
     _count++;
-    KLVDecodeVisitor vis(_elements, "file:klv.s3db");
+    KlvDecodeVisitor vis(_elements, dbUrl);
     klv.Accept(vis);
 }
 

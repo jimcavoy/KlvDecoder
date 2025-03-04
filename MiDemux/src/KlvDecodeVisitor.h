@@ -16,7 +16,7 @@
 
 namespace pt = boost::property_tree;
 
-class KLVDecodeVisitor
+class KlvDecodeVisitor
     : public Loki::BaseVisitor,
     public Loki::Visitor<lcss::KLVUnknown>,
     public Loki::Visitor<lcss::KLVParseError>,
@@ -164,7 +164,7 @@ class KLVDecodeVisitor
     public Loki::Visitor<lcss::UniversalMetadataElement>
 {
 public:
-    KLVDecodeVisitor(pt::ptree& klvSet, const char* databaseUri);
+    KlvDecodeVisitor(pt::ptree& klvSet, const char* databaseUrl);
 
     void Visit(lcss::KLVUnknown& klv);
     void Visit(lcss::KLVParseError& klv);
