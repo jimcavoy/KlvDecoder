@@ -5,7 +5,7 @@
 #ifdef WIN32
 const char* dbUrl = "file:///C:/PROGRA~1/klvp/share/klv.s3db";
 #else
-const char* dbUrl = "file:///usr/local/share/klv.s3db"
+const char* dbUrl = "file:///usr/local/share/klv.s3db";
 #endif
 
 KlvParserImpl::KlvParserImpl()
