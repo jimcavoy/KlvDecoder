@@ -74,7 +74,7 @@ public:
 #ifdef _WIN32
             closesocket(_socket);
 #else
-            close(_pimpl->_socket);
+            close(_socket);
 #endif
         }
     }
