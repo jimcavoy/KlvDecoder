@@ -22,8 +22,8 @@ target_sources(KlvDecoder
     src/main.cpp
     src/CmdLineParser.cpp
     src/CmdLineParser.h
-    src/UdpSender.cpp
-    src/UdpSender.h
+    src/KlvTextWriter.cpp
+    src/KlvTextWriter.h
 )
 
 target_include_directories(KlvDecoder
