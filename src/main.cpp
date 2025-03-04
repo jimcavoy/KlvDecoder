@@ -4,6 +4,7 @@
 #include <sstream>
 #include <MiDemux/MiDemux.h>
 #include <fcntl.h>
+#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/info_parser.hpp>
@@ -84,6 +85,79 @@ public:
     uint8_t ttl{ 255 };
     std::string ifaceaddress;
 };
+
+namespace boost {
+    namespace property_tree {
+        namespace json_parser
+        {
+
+            template<>
+            void write_json_helper(std::basic_ostream<typename pt::basic_ptree<std::string, std::string>::key_type::value_type>& stream,
+                const pt::basic_ptree<std::string, std::string>& pt,
+                int indent, bool pretty)
+            {
+
+                typedef typename pt::basic_ptree<std::string, std::string>::key_type::value_type Ch;
+                typedef typename std::basic_string<Ch> Str;
+
+                // Value or object or array
+                if (indent > 0 && pt.empty())
+                {
+                    // Write value
+                    Str data = create_escapes(pt.template get_value<Str>());
+                    try
+                    {
+                        float num = boost::lexical_cast<float>(data);
+                        stream << num;
+                    }
+                    catch ( const boost::bad_lexical_cast& e)
+                    {
+                        stream << Ch('"') << data << Ch('"');
+                    }
+
+                }
+                else if (indent > 0 && pt.count(Str()) == pt.size())
+                {
+                    // Write array
+                    stream << Ch('[');
+                    if (pretty) stream << Ch('\n');
+                    typename pt::basic_ptree<std::string, std::string>::const_iterator it = pt.begin();
+                    for (; it != pt.end(); ++it)
+                    {
+                        if (pretty) stream << Str(4 * (indent + 1), Ch(' '));
+                        write_json_helper(stream, it->second, indent + 1, pretty);
+                        if (boost::next(it) != pt.end())
+                            stream << Ch(',');
+                        if (pretty) stream << Ch('\n');
+                    }
+                    if (pretty) stream << Str(4 * indent, Ch(' '));
+                    stream << Ch(']');
+
+                }
+                else
+                {
+                    // Write object
+                    stream << Ch('{');
+                    if (pretty) stream << Ch('\n');
+                    typename pt::basic_ptree<std::string, std::string>::const_iterator it = pt.begin();
+                    for (; it != pt.end(); ++it)
+                    {
+                        if (pretty) stream << Str(4 * (indent + 1), Ch(' '));
+                        stream << Ch('"') << create_escapes(it->first) << Ch('"') << Ch(':');
+                        if (pretty) stream << Ch(' ');
+                        write_json_helper(stream, it->second, indent + 1, pretty);
+                        if (boost::next(it) != pt.end())
+                            stream << Ch(',');
+                        if (pretty) stream << Ch('\n');
+                    }
+                    if (pretty) stream << Str(4 * indent, Ch(' '));
+                    stream << Ch('}');
+                }
+
+            }
+        }
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Forward Declarations
