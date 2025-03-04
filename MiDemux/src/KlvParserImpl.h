@@ -1,6 +1,5 @@
 #pragma once
 
-#include "KlvDecodeVisitor.h"
 #include <klvp/klvprsr.h>
 #include <boost/property_tree/ptree.hpp>
 
@@ -24,8 +23,8 @@ public:
     void clear();
 
 private:
-    int         _count{ 0 };
-    lcss::TYPE  _type{ lcss::TYPE::LOCAL_SET };
-    pt::ptree   _klvSet;
-    pt::ptree   _elements;
+    int                 _count{ 0 };
+    lcss::TYPE          _type{ lcss::TYPE::LOCAL_SET };
+    pt::ptree           _klvSet;
+    pt::ptree           _elements;
 };

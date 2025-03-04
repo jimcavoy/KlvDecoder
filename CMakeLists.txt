@@ -52,7 +52,16 @@ target_link_libraries(KlvDecoder
 )
 endif()
 
+if (WIN32)
+install(TARGETS KlvDecoder 
+    RUNTIME_DEPENDENCIES
+    PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+    POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+    DIRECTORIES "$<TARGET_FILE_DIR:KlvDecoder>"
+)
+else ()
 install(TARGETS KlvDecoder)
+endif ()
 
 # Test cases
 enable_testing()
