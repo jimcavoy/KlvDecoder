@@ -1,4 +1,4 @@
-#include "UdpSender.h"
+#include "KlvTextWriter.h"
 
 #include <iostream>
 #include <fcntl.h>
@@ -33,17 +33,40 @@
 
 
 using namespace std;
-const int BUFLEN = 1500;
+const int BUFLEN = 1000;
 
-class UdpSender::Impl
+class KlvTextWriter::Impl
 {
 public:
-    Impl(uint32_t port)
+    Impl() {}
+    virtual ~Impl() {}
+
+public:
+    virtual void send(const char* data, size_t length) = 0;
+};
+
+class ConsoleImpl
+    : public KlvTextWriter::Impl
+{
+public:
+    ConsoleImpl() {}
+    virtual ~ConsoleImpl() {}
+
+public:
+    void send(const char* data, size_t length) override;
+};
+
+class UdpImpl
+    : public KlvTextWriter::Impl
+{
+public:
+    UdpImpl(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr)
         : _port(port)
     {
+        initSocket(ipaddr, port, ttl, iface_addr);
     }
 
-    ~Impl()
+    virtual ~UdpImpl()
     {
         if (_socket != INVALID_SOCKET)
         {
@@ -57,7 +80,8 @@ public:
     }
 
 public:
-    void initSocket(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr);
+    void send(const char* data, size_t length) override;
+    void initSocket(const char* ipaddr, unsigned short port, unsigned char ttl, const char* iface_addr);
 
 public:
     SOCKET _socket{ INVALID_SOCKET };
@@ -67,27 +91,27 @@ public:
     uint16_t _port{};
 };
 
-UdpSender::UdpSender(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr)
-    : _pimpl(std::make_unique<UdpSender::Impl>(port))
+KlvTextWriter::KlvTextWriter(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr)
 {
-    if (strcmp(ipaddr, "-") == 0) // send the data onto a socket
+    if (strcmp(ipaddr, "-") == 0) // write the data to console
     {
+        _pimpl = std::make_unique<ConsoleImpl>();
 #ifdef _WIN32
         _setmode(_fileno(stdout), _O_BINARY);
 #endif
     }
-    else // write the data to stdout
+    else // send the data over UDP
     {
-        _pimpl->initSocket(ipaddr, port, ttl, iface_addr);
+        _pimpl = std::make_unique<UdpImpl>(ipaddr, port, ttl, iface_addr);
     }
 }
 
-UdpSender::~UdpSender(void)
+KlvTextWriter::~KlvTextWriter(void)
 {
 
 }
 
-void UdpSender::Impl::initSocket(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr)
+void UdpImpl::initSocket(const char* ipaddr, uint16_t port, unsigned char ttl, const char* iface_addr)
 {
     char szErr[BUFSIZ]{};
     IN_ADDR inaddr;
@@ -141,9 +165,9 @@ void UdpSender::Impl::initSocket(const char* ipaddr, uint16_t port, unsigned cha
         {
 #ifdef _WIN32
             WSACleanup();
-            sprintf(szErr, "UdpSender Error setting socket option IP_MULTICAST_IF: %d", WSAGetLastError());
+            sprintf(szErr, "KlvTextWriter Error setting socket option IP_MULTICAST_IF: %d", WSAGetLastError());
 #else
-            sprintf(szErr, "UdpSender Error setting socket option IP_MULTICAST_IF: %d", errno);
+            sprintf(szErr, "KlvTextWriter Error setting socket option IP_MULTICAST_IF: %d", errno);
 #endif
             std::runtime_error exp(szErr);
             throw exp;
@@ -171,52 +195,60 @@ void UdpSender::Impl::initSocket(const char* ipaddr, uint16_t port, unsigned cha
     _address = _recvAddr.sin_addr.s_addr;
 }
 
-void UdpSender::send(const char* data, size_t length)
+void KlvTextWriter::send(const std::string& data)
+{
+    _pimpl->send(data.data(), data.length());
+}
+
+void UdpImpl::send(const char* data, size_t length)
 {
     // Write the data to the standard console out
-    if (_pimpl->_socket == INVALID_SOCKET)
+    if (_socket == INVALID_SOCKET)
     {
-        size_t w = 0;
-        for (size_t nleft = length; nleft > 0;)
-        {
-            w = fwrite(data, 1, nleft, stdout);
-            if (w == 0)
-            {
-                std::cerr << "error: unable to write " << nleft << " bytes to stdout" << std::endl;
-            }
-            nleft -= w;
-            fflush(stdout);
-        }
+        return;
     }
-    else // Send the data onto a socket
+
+    int bufsiz = BUFLEN;
+    int nLeft = length;
+    size_t i = 0;
+    while (i < length)
     {
-        int bufsiz = 1000;
-        int nLeft = length;
-        size_t i = 0;
-        while (i < length)
+        if (nLeft < bufsiz)
         {
-            if (nLeft < bufsiz)
-            {
-                bufsiz = nLeft;
-            }
-
-            const int status = sendto(_pimpl->_socket,
-                data+i,
-                bufsiz,
-                0,
-                (SOCKADDR*)&_pimpl->_recvAddr,
-                sizeof(_pimpl->_recvAddr));
-
-            if (status == SOCKET_ERROR)
-            {
-#ifdef _WIN32
-                const UINT32 errCode = WSAGetLastError();
-#else
-                const int errCode = errno;
-#endif
-            }
-            i += 1000;
-            nLeft -= 1000;
+            bufsiz = nLeft;
         }
+
+        const int status = sendto(_socket,
+            data + i,
+            bufsiz,
+            0,
+            (SOCKADDR*)&_recvAddr,
+            sizeof(_recvAddr));
+
+        if (status == SOCKET_ERROR)
+        {
+#ifdef _WIN32
+            const int errCode = WSAGetLastError();
+#else
+            const int errCode = errno;
+#endif
+        }
+        i += BUFLEN;
+        nLeft -= BUFLEN;
+    }
+}
+
+void ConsoleImpl::send(const char* data, size_t length)
+{
+    size_t w = 0;
+    for (size_t nleft = length; nleft > 0;)
+    {
+        w = fwrite(data, 1, nleft, stdout);
+        if (w == 0)
+        {
+            std::cerr << "error: unable to write " << nleft << " bytes to stdout" << std::endl;
+        }
+        nleft -= w;
+        fflush(stdout);
     }
 }

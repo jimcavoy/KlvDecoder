@@ -10,7 +10,7 @@
 #include <boost/url.hpp>
 
 #include "CmdLineParser.h"
-#include "UdpSender.h"
+#include "KlvTextWriter.h"
 
 #ifdef _WIN32
 #include <io.h>
@@ -20,6 +20,9 @@
 
 bool gRun = true;
 
+/// <summary>
+/// A helper class to parse a string representing a URL
+/// </summary>
 class UrlParser
 {
 public:
@@ -89,6 +92,12 @@ BOOL CtrlHandler(DWORD fdwCtrlType);
 #endif
 void Banner();
 
+/// <summary>
+/// Main function
+/// </summary>
+/// <param name="argc"></param>
+/// <param name="argv"></param>
+/// <returns></returns>
 int main(int argc, char* argv[])
 {
     int retCode = 0;
@@ -108,7 +117,7 @@ int main(int argc, char* argv[])
         MiDemux demux(args.frequency());
         UrlParser urlp;
         urlp.parse(args.outputUrl());
-        UdpSender writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
+        KlvTextWriter writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
 
         if (args.source() == "-")
         {
@@ -157,7 +166,7 @@ int main(int argc, char* argv[])
 
                         if (!output.str().empty())
                         {
-                            writer.send(output.str().c_str(), output.str().length());
+                            writer.send(output.str());
                         }
                     });
             }
