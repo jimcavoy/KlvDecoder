@@ -121,12 +121,12 @@ void Mpeg2TsDecoder::processKlv(const lcss::PESPacket& pes)
             {
                 stream_id = 0xBD;
             }
+        }
 
-            if (stream_id == 0xBD)
-            {
-                _klvParser.parse({ (BYTE*)_klvSample.data(), (UINT32)_klvSample.length() });
-                outputSet();
-            }
+        if (stream_id == 0xBD)
+        {
+            _klvParser.parse({ (BYTE*)_klvSample.data(), (UINT32)_klvSample.length() });
+            outputSet();
         }
     }
 }
