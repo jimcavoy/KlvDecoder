@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
 
 void Banner()
 {
-    std::cerr << "KlvDecoder v1.0.0" << std::endl;
+    std::cerr << "KlvDecoder v1.0.1" << std::endl;
     std::cerr << "Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
