@@ -144,7 +144,7 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVUnknown& klv)
     obj.put("value", strval.str());
 
     pt::ptree::value_type vt("UNKNOWN", obj);
-    _set.push_back(vt);
+    //_set.push_back(vt);
     delete[] val;
 }
 
@@ -174,13 +174,13 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVParseError& klv)
 
     pt::ptree::value_type vt("PARSER_ERRRO", obj);
 
-    _set.push_back(vt);
+    //_set.push_back(vt);
     delete[] val;
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVObjectCountryCodingMethodVersionDate& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVSecurityClassification& klv)
@@ -194,22 +194,22 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVClassifyingCountryandReleasingInstruc
 {
     uint8_t value;
     klv.value(&value);
-    _set.push_back(printInt(_ldsDb, klv, value));
+    //_set.push_back(printInt(_ldsDb, klv, value));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassifyingCountry& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVSecuritySCISHIinformation& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVCaveats& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVReleasingInstructions& klv)
@@ -219,34 +219,34 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVReleasingInstructions& klv)
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassifiedBy& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVDerivedFrom& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassificationReason& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVDeclassificationDate& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassificationandMarkingSystem& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVObjectCountryCodingMethod& klv)
 {
     uint8_t value;
     klv.value(&value);
-    _set.push_back(printInt(_ldsDb, klv, value));
+    //_set.push_back(printInt(_ldsDb, klv, value));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVObjectCountryCodes& klv)
@@ -275,13 +275,13 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVObjectCountryCodes& klv)
 
     pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
-    _set.push_back(vt);
+    //_set.push_back(vt);
     delete[] buf;
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassificationComments& klv)
 {
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVUMIDVideo& klv)
@@ -336,7 +336,7 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVStreamID& klv)
 {
     uint8_t value;
     klv.value(&value);
-    _set.push_back(printInt(_ldsDb, klv, value));
+    //_set.push_back(printInt(_ldsDb, klv, value));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVTransportStreamID& klv)
@@ -346,7 +346,7 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVTransportStreamID& klv)
     uint16_t val;
     memcpy(&val, value, 2);
     uint16_t nValue = ntohs(val);
-    _set.push_back(printInt(_ldsDb, klv, nValue));
+    //_set.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVItemDesignator& klv)
@@ -381,7 +381,7 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVItemDesignator& klv)
 
     pt::ptree::value_type vt("Item_Designator_ID", obj);
 
-    _set.push_back(vt);
+    //_set.push_back(vt);
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVVersion& klv)
@@ -391,14 +391,14 @@ void KlvSecuritySetVisitor::Visit(lcss::KLVVersion& klv)
     uint16_t val;
     memcpy(&val, value, 2);
     uint16_t nValue = ntohs(val);
-    _set.push_back(printInt(_ldsDb, klv, nValue));
+    //_set.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvSecuritySetVisitor::Visit(lcss::KLVClassifyingCountryandReleasingInstructionsCountryCodingMethodVersionDate& klv)
 {
     uint8_t* buf = new uint8_t[klv.length()]{};
     klv.value(buf);
-    _set.push_back(printString(_ldsDb, klv));
+    //_set.push_back(printString(_ldsDb, klv));
     delete[] buf;
 }
 

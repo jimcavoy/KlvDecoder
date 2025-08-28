@@ -261,7 +261,7 @@ void KlvDecodeVisitor::Visit(lcss::KLVUnknown& klv)
     obj.put("value", strval.str());
     pt::ptree::value_type vt("UNKNOWN", obj);
 
-    _klvSet.push_back(vt);
+    //_klvSet.push_back(vt);
     delete[] val;
 }
 
@@ -290,7 +290,7 @@ void KlvDecodeVisitor::Visit(lcss::KLVParseError& klv)
     obj.put("value", strval.str());
     pt::ptree::value_type vt("PARSE ERROR", obj);
 
-    _klvSet.push_back(vt);
+    //_klvSet.push_back(vt);
     delete[] val;
 }
 
@@ -316,13 +316,13 @@ void KlvDecodeVisitor::Visit(lcss::KLVChecksum& klv)
     obj.put("value", std::string(crc));
     pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
-    _klvSet.push_back(vt);
+    //_klvSet.push_back(vt);
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVUNIXTimeStamp& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
+    //_klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVMissionID& klv)
@@ -332,25 +332,25 @@ void KlvDecodeVisitor::Visit(lcss::KLVMissionID& klv)
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformTailNumber& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformHeadingAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformPitchAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformRollAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformTrueAirspeed& klv)
@@ -366,12 +366,12 @@ void KlvDecodeVisitor::Visit(lcss::KLVPlatformIndicatedAirspeed& klv)
     uint8_t val;
     klv.value(&val);
     uint16_t nValue = (uint16_t)val;
-    _klvSet.push_back(printInt(_ldsDb, klv, nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformDesignation& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVImageSourceSensor& klv)
@@ -381,7 +381,7 @@ void KlvDecodeVisitor::Visit(lcss::KLVImageSourceSensor& klv)
 
 void KlvDecodeVisitor::Visit(lcss::KLVImageCoordinateSystem& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorLatitude& klv)
@@ -405,139 +405,139 @@ void KlvDecodeVisitor::Visit(lcss::KLVSensorTrueAltitude& klv)
 void KlvDecodeVisitor::Visit(lcss::KLVSensorHorizontalFieldofView& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorVerticalFieldofView& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorRelativeAzimuthAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorRelativeElevationAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorRelativeRollAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSlantRange& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetWidth& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVFrameCenterLatitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVFrameCenterLongitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVFrameCenterElevation& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLatitudePoint1& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLongitudePoint1& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLatitudePoint2& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLongitudePoint2& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLatitudePoint3& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLongitudePoint3& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLatitudePoint4& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOffsetCornerLongitudePoint4& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVIcingDetected& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWindDirection& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWindSpeed& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVStaticPressure& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVDensityAltitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOutsideAirTemperature& klv)
@@ -545,49 +545,49 @@ void KlvDecodeVisitor::Visit(lcss::KLVOutsideAirTemperature& klv)
     uint8_t val;
     klv.value(&val);
     int nValue = (int)val;
-    _klvSet.push_back(printInt(_ldsDb, klv, nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetLocationLatitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetLocationLongitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetLocationElevation& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetTrackGateWidth& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetTrackGateHeight& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetErrorEstimateCE90& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetErrorEstimateLE90& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVGenericFlagData01& klv)
@@ -600,7 +600,7 @@ void KlvDecodeVisitor::Visit(lcss::KLVGenericFlagData01& klv)
     obj.put<int>("key", klv.key());
     obj.put("value", *klv.value());
     pt::ptree::value_type vt("Generic_Flag_Data_01", obj);
-    _klvSet.push_back(vt);
+    //_klvSet.push_back(vt);
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSecurityLocalMetadataSet& klv)
@@ -628,43 +628,43 @@ void KlvDecodeVisitor::Visit(lcss::KLVSecurityLocalMetadataSet& klv)
 void KlvDecodeVisitor::Visit(lcss::KLVDifferentialPressure& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformAngleofAttack& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformVerticalSpeed& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformSideslipAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAirfieldBarometicPressure& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAirfieldElevation& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVRelativeHumidity& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformGroundSpeed& klv)
@@ -672,52 +672,52 @@ void KlvDecodeVisitor::Visit(lcss::KLVPlatformGroundSpeed& klv)
     uint8_t val;
     klv.value(&val);
     uint16_t nValue = (uint16_t)val;
-    _klvSet.push_back(printInt(_ldsDb, klv, nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVGroundRange& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformFuelRemaining& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformCallSign& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWeaponLoad& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWeaponFired& klv)
 {
-    _klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
+    //_klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVLaserPRFCode& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorFieldofViewName& klv)
 {
-    _klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
+    //_klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformMagneticHeading& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVUASLDSVersionNumber& klv)
@@ -725,170 +725,170 @@ void KlvDecodeVisitor::Visit(lcss::KLVUASLDSVersionNumber& klv)
     uint8_t val;
     klv.value(&val);
     int nValue = (int)val;
-    _klvSet.push_back(printInt(_ldsDb, klv, nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetLocationCovarianceMatrix& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformLatitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformLongitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformAltitude& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformName& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformHeading& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVEventStartTimeUTC& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
+    //_klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVRVTLocalDataSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVVMTILocalDataSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorEllipsoidHeight& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformEllipsoidHeight& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+   //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOperationalMode& klv)
 {
-    _klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
+    //_klvSet.push_back(printInt(_ldsDb, klv, *klv.value()));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVFrameCenterHeightAboveEllipsoid& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorNorthVelocity& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorEastVelocity& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVImageHorizonPixelPack& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLatitudePoint1Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLongitudePoint1Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLatitudePoint2Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLongitudePoint2Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLatitudePoint3Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLongitudePoint3Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLatitudePoint4Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCornerLongitudePoint4Full& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformPitchAngleFull& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformRollAngleFull& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformAngleofAttackFull& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformSideslipAngleFull& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
@@ -917,265 +917,265 @@ void KlvDecodeVisitor::Visit(lcss::KLVMIISCoreIdentifier& klv)
     obj.put("value", std::string(uuid));
     pt::ptree::value_type vt(space2underscore(lds.name), obj);
 
-    _klvSet.push_back(vt);
+    //_klvSet.push_back(vt);
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSARMotionImageryMetadata& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetWidthExtended& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVRangeImageLocalSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVGeoRegistrationLocalSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCompositeImagingLocalSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSegmentLocalSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAmendLocalSet& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSDCCFLP& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVDensityAltitudeExtended& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorEllipsoidHeightExtended& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAlternatePlatformEllipsoidHeightExtended& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVStreamDesignator& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOperationalBase& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVBroadcastSource& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVRangeToRecoveryLocation& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTimeAirborne& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPropulsionUnitSpeed& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformCourseAngle& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAltitudeAGL& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVRadarAltimeter& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVControlCommand& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVControlCommandVerificationList& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorAzimuthRate& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorElevationRate& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorRollRate& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOnboardMIStoragePercentFull& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVActiveWavelengthList& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCountryCodes& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVNumberofNAVSATsinView& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPositioningMethodSource& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPlatformStatus& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorControlMode& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVSensorFrameRatePack& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWavelengthsList& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTargetID& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVAirbaseLocations& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTakeoffTime& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
+    //_klvSet.push_back(printTimestamp(_ldsDb, klv, _decoder.tmValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVTransmissionFrequency& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVOnboardMIStorageCapacity& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVZoomPercentage& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
+    //_klvSet.push_back(printReal(_ldsDb, klv, _decoder.fValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCommunicationsMethod& klv)
 {
-    _klvSet.push_back(printString(_ldsDb, klv));
+    //_klvSet.push_back(printString(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVLeapSeconds& klv)
 {
     klv.Accept(_decoder);
-    _klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
+    //_klvSet.push_back(printInt(_ldsDb, klv, _decoder.nValue));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVCorrectionOffset& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVPayloadList& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVActivePayloads& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWeaponsStores& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 void KlvDecodeVisitor::Visit(lcss::KLVWaypointList& klv)
 {
-    _klvSet.push_back(printToBeImplemented(_ldsDb, klv));
+    //_klvSet.push_back(printToBeImplemented(_ldsDb, klv));
 }
 
 
