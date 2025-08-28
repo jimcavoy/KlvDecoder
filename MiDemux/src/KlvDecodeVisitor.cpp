@@ -77,8 +77,8 @@ namespace
         {
             if (isprint(buf[i]))
                 val << (char)buf[i];
-            else
-                val << hex << buf[i] << dec;
+            //else
+                //val << hex << buf[i] << dec;
         }
 
         LDSEntry lds = fetchKlvDefinition(db, klv.key());
