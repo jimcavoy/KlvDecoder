@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
 
     try
     {
-        MiDemux demux(args.frequency());
+        MiDemux demux(args.frequency(), args.klvdbFilepath());
         UrlParser urlp;
         urlp.parse(args.outputUrl());
         KlvTextWriter writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());

@@ -9,6 +9,12 @@ const char* dbUrl = "file:///usr/local/share/klv.s3db";
 #endif
 
 KlvParserImpl::KlvParserImpl()
+    :_klvdbFilepath(dbUrl)
+{
+}
+
+KlvParserImpl::KlvParserImpl(std::string path)
+    :_klvdbFilepath(path)
 {
     validateChecksum(true);
 }
@@ -27,7 +33,7 @@ void KlvParserImpl::onElement(lcss::KLVElement& klv)
 {
     lcss::KLVParser::onElement(klv);
     _count++;
-    KlvDecodeVisitor vis(_elements, dbUrl);
+    KlvDecodeVisitor vis(_elements, _klvdbFilepath.c_str());
     klv.Accept(vis);
 }
 
@@ -65,4 +71,9 @@ void KlvParserImpl::clear()
 {
     _klvSet.clear();
     _elements.clear();
+}
+
+void KlvParserImpl::setKlvdbFilepath(const std::string& filepath)
+{
+    _klvdbFilepath = filepath;
 }

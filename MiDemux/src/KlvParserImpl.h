@@ -2,6 +2,7 @@
 
 #include <klvp/klvprsr.h>
 #include <boost/property_tree/ptree.hpp>
+#include <string>
 
 namespace pt = boost::property_tree;
 
@@ -10,6 +11,7 @@ class KlvParserImpl :
 {
 public:
     KlvParserImpl();
+    KlvParserImpl(std::string klvdbFilepath);
     virtual ~KlvParserImpl();
 
     void onBeginSet(int len, lcss::TYPE type) override;
@@ -22,9 +24,12 @@ public:
     const pt::ptree& klvSet() const;
     void clear();
 
+    void setKlvdbFilepath(const std::string& filepath);
+
 private:
     int                 _count{ 0 };
     lcss::TYPE          _type{ lcss::TYPE::LOCAL_SET };
     pt::ptree           _klvSet;
     pt::ptree           _elements;
+    std::string         _klvdbFilepath;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mp2tp/libmp2tp.h>
+#include <string>
 
 #include "PmtProxy.h"
 #include "AccessUnit.h"
@@ -15,7 +16,7 @@ class Mpeg2TsDecoder
     : public lcss::TSParser
 {
 public:
-    Mpeg2TsDecoder(float frequency);
+    Mpeg2TsDecoder(float frequency, const std::string& klvdbFilepath);
 
     void onPacket(lcss::TransportPacket& pckt);
 

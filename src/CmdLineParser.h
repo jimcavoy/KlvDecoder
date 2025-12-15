@@ -24,6 +24,7 @@ public:
     FORMAT format() const;
     std::string source() const;
     std::string outputUrl() const;
+    std::string klvdbFilepath() const;
 
 private:
     class Impl;

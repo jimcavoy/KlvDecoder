@@ -3,10 +3,10 @@
 #include <iterator>
 
 
-Mpeg2TsDecoder::Mpeg2TsDecoder(float frequency)
+Mpeg2TsDecoder::Mpeg2TsDecoder(float frequency, const std::string& klvdbFilepath)
     : _interval((uint64_t)(90000 / frequency))
 {
-    
+    _klvParser.setKlvdbFilepath(klvdbFilepath);
 }
 
 void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
