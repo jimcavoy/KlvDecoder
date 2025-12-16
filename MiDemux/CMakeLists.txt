@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project(MiDemux
-  VERSION 1.0.1
+  VERSION 1.2.0
   DESCRIPTION "STANAG 4609 Motion Imagery De-multiplexer"
   LANGUAGES CXX
 )
