@@ -62,18 +62,22 @@ The `-C` option specifies the build configuration to test, either `Debug` or `Re
 ## Usage
 
 ```
-KlvDecoder v1.0.0
+KlvDecoder v1.2.0
 Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com
 Allowed options.:
-  -? [ --help ]          Produce help message.
-  --source arg           Source Motion Imagery stream or file. (default: - )
-  -r [ --reads ] arg     Number of KLV reads. Zero means continuous reads.
-                         (default: 0
-  -f [ --freqs ] arg     Frequency (Hz) to output the text representation.
-                         (default: 1)
-  -F [ --format ] arg    Output text format [info|json|xml]. (default: json).
-  -o [ --outputUrl ] arg Stream the text representation over UDP. If the option
-                         is missing, output to console. (default: - )
+  -? [ --help ]              Produce help message.
+  --source arg               The source Motion Imagery stream or file. 
+                             (default: - )
+  -r [ --reads ] arg         Number of KLV reads. Zero means continuous reads. 
+                             (default: 0)
+  -f [ --freqs ] arg         Frequency (Hz) to output the text representation. 
+                             (default: 1)
+  -F [ --format ] arg        Output text format [info|json|xml]. (default: 
+                             json).
+  -o [ --outputUrl ] arg     Stream the text representation over UDP. If the 
+                             option is empty, output to console.
+  -k [ --klvdbFilepath ] arg The filepath to klv.s3db file.
+
 ```
 The `--outputUrl` option has an optional query component with the following attribute-value pairs:
 
