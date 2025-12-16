@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.21)
 project (KlvDecoder
-	VERSION 1.0.1
+	VERSION 1.2.0
 	DESCRIPTION "Converts KLV binary encoded metadata in a STANAG 4609 Motion Imagery stream to a human readable text format."
 	LANGUAGES CXX)
 

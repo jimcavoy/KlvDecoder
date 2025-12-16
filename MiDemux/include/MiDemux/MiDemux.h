@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -12,7 +13,7 @@ public:
     typedef std::function<void(const pt::ptree& klvset)> OnKlvSet;
 
 public:
-    MiDemux(float frequency);
+    MiDemux(float frequency, const std::string& klvdbFilepath);
     ~MiDemux();
 
     void read(const uint8_t* stream, size_t len);

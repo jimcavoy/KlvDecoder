@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
 
     try
     {
-        MiDemux demux(args.frequency());
+        MiDemux demux(args.frequency(), args.klvdbFilepath());
         UrlParser urlp;
         urlp.parse(args.outputUrl());
         KlvTextWriter writer(urlp.ipaddress.c_str(), urlp.port, urlp.ttl, urlp.ifaceaddress.c_str());
@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
 
 void Banner()
 {
-    std::cerr << "KlvDecoder v1.0.1" << std::endl;
+    std::cerr << "KlvDecoder v1.2.0" << std::endl;
     std::cerr << "Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 

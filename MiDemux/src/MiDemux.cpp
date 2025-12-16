@@ -6,8 +6,8 @@
 class MiDemux::Impl
 {
 public:
-    Impl(float frequency)
-        :_decoder(std::make_unique<Mpeg2TsDecoder>(frequency))
+    Impl(float frequency, const std::string& klvdbFilepath)
+        :_decoder(std::make_unique<Mpeg2TsDecoder>(frequency, klvdbFilepath))
     {
 
     }
@@ -16,8 +16,8 @@ public:
 };
 
 
-MiDemux::MiDemux(float frequency)
-    :_pimpl(std::make_unique<MiDemux::Impl>(frequency))
+MiDemux::MiDemux(float frequency, const std::string& klvdbFilepath)
+    :_pimpl(std::make_unique<MiDemux::Impl>(frequency, klvdbFilepath))
 {
 }
 
