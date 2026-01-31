@@ -5,7 +5,6 @@
     "boost-program-options",
     "boost-property-tree",
     "boost-url",
-    "ms-gsl",
     "sqlite3"
   ]
 }
