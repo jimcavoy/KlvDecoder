@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.21)
 project (KlvDecoder
-	VERSION 1.2.0
+	VERSION 1.2.1
 	DESCRIPTION "Converts KLV binary encoded metadata in a STANAG 4609 Motion Imagery stream to a human readable text format."
 	LANGUAGES CXX)
 
@@ -24,6 +24,12 @@ target_sources(KlvDecoder
     src/CmdLineParser.h
     src/KlvTextWriter.cpp
     src/KlvTextWriter.h
+)
+
+# specify the C++ standard
+target_compile_features(MiDemux
+  PUBLIC 
+    cxx_std_20
 )
 
 target_include_directories(KlvDecoder

@@ -7,7 +7,6 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <gsl/gsl>
 #include <regex>
 
 #ifdef WIN32
@@ -618,7 +617,7 @@ void KlvDecodeVisitor::Visit(lcss::KLVSecurityLocalMetadataSet& klv)
     KlvSecuritySetVisitor pv(array, _ldsDb);
     KlvSecuritySetParserImpl ssp(pv);
     const int len = klv.length() + numOfBytesEncoded;
-    ssp.parse({ ss, gsl::narrow_cast<std::size_t>(len) });
+    ssp.parse({ ss, static_cast<std::size_t>(len) });
 
     pt::ptree::value_type vt("Security_Set", array);
 

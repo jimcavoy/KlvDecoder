@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project(MiDemux
-  VERSION 1.2.0
+  VERSION 1.2.1
   DESCRIPTION "STANAG 4609 Motion Imagery De-multiplexer"
   LANGUAGES CXX
 )
@@ -27,7 +27,6 @@ find_package(klvp 1 CONFIG REQUIRED)
 set(ldsdb_DIR ${klvp_DIR}/../ldsdb)
 find_package(ldsdb 1 CONFIG REQUIRED)
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
-find_package(Microsoft.GSL CONFIG REQUIRED)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS property_tree)
 
@@ -60,7 +59,7 @@ set_property(TARGET MiDemux PROPERTY POSITION_INDEPENDENT_CODE ON)
 # specify the C++ standard
 target_compile_features(MiDemux
   PUBLIC 
-    cxx_std_17
+    cxx_std_20
 )
 
 target_include_directories(MiDemux
@@ -76,6 +75,5 @@ target_link_libraries(MiDemux
     lcss::klvp
     lcss::ldsdb
     lcss::mp2tp
-    Microsoft.GSL::GSL
     Boost::property_tree
 )
